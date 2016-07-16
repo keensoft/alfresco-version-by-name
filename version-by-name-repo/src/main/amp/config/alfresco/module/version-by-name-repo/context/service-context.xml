@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+	<bean id="autoVersionByNameBehaviour" class="es.keensoft.alfresco.behaviour.AutoVersionByNameBehaviour" init-method="init">
+    	<property name="policyComponent" ref="policyComponent"/>
+    	<property name="nodeService" ref="NodeService"/>
+    	<property name="contentService" ref="ContentService"/>
+    	<property name="transactionService" ref="TransactionService" />
+    	<property name="threadPoolExecutor" ref="autoVersionByNumberThreadPoolExecutor" />
+	</bean>
+	
+	<bean id="autoVersionByNumberThreadPoolExecutor" class="org.alfresco.util.ThreadPoolExecutorFactoryBean">
+        <property name="poolName" value="syncFoldersThreadPool" />
+        <property name="corePoolSize" value="1" />
+        <property name="maximumPoolSize" value="1" />
+        <property name="threadPriority" value="5" />
+    </bean>
+
+</beans>
