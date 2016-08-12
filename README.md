@@ -27,7 +27,9 @@ Video demo available
 [![Demo video](https://img.youtube.com/vi/27gjzEPOomo/0.jpg)](https://www.youtube.com/watch?v=27gjzEPOomo)
 
 ***Extra material***
+
 How to develop this addon (in Spanish)
+
 [![Developing in Alfresco](https://img.youtube.com/vi/ekPyWLFmip0/0.jpg)](https://www.youtube.com/watch?v=ekPyWLFmip0)
 
 
