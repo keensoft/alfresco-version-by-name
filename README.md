@@ -22,7 +22,14 @@ This addon provides a behaviour to auto-versioning the existing file with the co
 5: Folder > Test.pdf [1.2]
 ...
 ```
-[Video demo available](https://www.youtube.com/watch?v=27gjzEPOomo)
+Video demo available
+
+[![Demo video](https://img.youtube.com/vi/27gjzEPOomo/0.jpg)](https://www.youtube.com/watch?v=27gjzEPOomo)
+
+***Extra material***
+How to develop this addon (in Spanish)
+[![Developing in Alfresco](https://img.youtube.com/vi/ekPyWLFmip0/0.jpg)](https://www.youtube.com/watch?v=ekPyWLFmip0)
+
 
 **License**
 The plugin is licensed under the [LGPL v3.0](http://www.gnu.org/licenses/lgpl-3.0.html). 
