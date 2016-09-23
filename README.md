@@ -1,3 +1,4 @@
+
 Alfresco Version by Name
 ========================
 
@@ -40,9 +41,10 @@ The plugin is licensed under the [LGPL v3.0](http://www.gnu.org/licenses/lgpl-3.
 Current addon release is 1.0.0
 
 **Compatibility**
-The current version has been developed using Alfresco 5.1 and Alfresco SDK 2.2.0, although it should run in Alfresco 5.0.d and Alfresco 5.0.c
+The current version has been developed using Alfresco 5.0.d and Alfresco SDK 2.1.1, but also runs in Alfresco 5.1.x
 
 ***No original Alfresco resources have been overwritten***
+
 
 Downloading the ready-to-deploy-plugin
 --------------------------------------
@@ -52,10 +54,12 @@ The binary distribution is made of one amp file to be deployed in Alfresco as a 
 
 You can install it by using standard [Alfresco deployment tools](http://docs.alfresco.com/community/tasks/dev-extensions-tutorials-simple-module-install-amp.html) in `alfresco.war`
 
+
 Building the artifacts
 ----------------------
 You can build the artifacts from source code using maven
 ```$ mvn clean package```
+
 
 Notes
 -----
