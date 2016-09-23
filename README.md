@@ -50,7 +50,7 @@ Downloading the ready-to-deploy-plugin
 --------------------------------------
 The binary distribution is made of one amp file to be deployed in Alfresco as a repo module:
 
-* [repo AMP](https://github.com/keensoft/alfresco-version-by-name/releases/download/1.0.0/version-by-name-repo-1.0.0.amp)
+* [repo AMP](https://github.com/keensoft/alfresco-version-by-name/releases/download/1.1.0/version-by-name-repo.amp)
 
 You can install it by using standard [Alfresco deployment tools](http://docs.alfresco.com/community/tasks/dev-extensions-tutorials-simple-module-install-amp.html) in `alfresco.war`
 
