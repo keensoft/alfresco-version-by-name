@@ -40,6 +40,8 @@ public class AutoVersionByNameBehaviour implements NodeServicePolicies.OnCreateN
 				
 				writer.putContent(reader);
 				
+				// Solving issue #2: nodes marked as hidden are not included in postActivity processor 
+				nodeService.addAspect(uploadedNodeRef, ContentModel.ASPECT_HIDDEN, null);
 				nodeService.deleteNode(uploadedNodeRef);
         		
         	}
@@ -57,6 +59,7 @@ public class AutoVersionByNameBehaviour implements NodeServicePolicies.OnCreateN
     	String fileName = cleanNumberedSuffixes(nodeService.getProperty(currentNodeRef, ContentModel.PROP_NAME).toString());
     	NodeRef folder = nodeService.getPrimaryParent(currentNodeRef).getParentRef();
     	
+    	// FIXME This method could be potentially dangerous when having more than 3,000 childs (!) 
     	for (ChildAssociationRef child : nodeService.getChildAssocs(folder)) {
     		String currentName = nodeService.getProperty(child.getChildRef(), ContentModel.PROP_NAME).toString();
     		if (currentName.equals(fileName) && !(child.getChildRef().getId().equals(currentNodeRef.getId()))) {
