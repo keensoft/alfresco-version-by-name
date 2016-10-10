@@ -1,23 +1,38 @@
 package es.keensoft.alfresco.behaviour;
 
+import java.net.URLEncoder;
+
 import org.alfresco.model.ContentModel;
+import org.alfresco.repo.Client;
+import org.alfresco.repo.Client.ClientType;
+import org.alfresco.repo.activities.ActivityType;
 import org.alfresco.repo.node.NodeServicePolicies;
 import org.alfresco.repo.policy.Behaviour;
 import org.alfresco.repo.policy.JavaBehaviour;
 import org.alfresco.repo.policy.PolicyComponent;
+import org.alfresco.service.cmr.activities.ActivityService;
+import org.alfresco.service.cmr.model.FileFolderService;
+import org.alfresco.service.cmr.model.FileInfo;
 import org.alfresco.service.cmr.repository.ChildAssociationRef;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
+import org.alfresco.service.cmr.site.SiteInfo;
+import org.alfresco.service.cmr.site.SiteService;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONStringer;
+import org.json.JSONWriter;
 
 public class AutoVersionByNameBehaviour implements NodeServicePolicies.OnCreateNodePolicy {
 	
     private PolicyComponent policyComponent;
     private NodeService nodeService;
     private ContentService contentService;
+    private ActivityService activityService;
+    private SiteService siteService;
+    private FileFolderService fileFolderService;
 
 	public void init() {
         policyComponent.bindClassBehaviour(NodeServicePolicies.OnCreateNodePolicy.QNAME, ContentModel.TYPE_CONTENT,
@@ -40,14 +55,44 @@ public class AutoVersionByNameBehaviour implements NodeServicePolicies.OnCreateN
 				
 				writer.putContent(reader);
 				
-				// Solving issue #2: nodes marked as hidden are not included in postActivity processor 
+			    // Solving issue #2: nodes marked as hidden are not included in postActivity processor 
 				nodeService.addAspect(uploadedNodeRef, ContentModel.ASPECT_HIDDEN, null);
+				postActivityUpdated(previouslyExistentDoc);
 				nodeService.deleteNode(uploadedNodeRef);
         		
         	}
         	
         }
         
+	}
+	
+	// As we are skipping duplicated file uploading, we need to post a new UPDATE on previously existing document
+	private void postActivityUpdated(NodeRef nodeRef) {
+		
+		SiteInfo siteInfo = siteService.getSite(nodeRef);
+		String jsonActivityData = "";
+		try {
+            JSONWriter jsonWriter = new JSONStringer().object();
+            jsonWriter.key("title").value(nodeService.getProperty(nodeRef, ContentModel.PROP_NAME).toString());
+            jsonWriter.key("nodeRef").value(nodeRef.toString());
+			StringBuilder sb = new StringBuilder("document-details?nodeRef=");
+			sb.append(URLEncoder.encode(nodeRef.toString(), "UTF-8"));
+			jsonWriter.key("page").value(sb.toString());
+            jsonActivityData = jsonWriter.endObject().toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		FileInfo fileInfo = fileFolderService.getFileInfo(nodeRef);
+		
+        activityService.postActivity(
+				ActivityType.FILE_UPDATED, 
+				(siteInfo == null ? null : siteInfo.getShortName()), 
+				(siteInfo == null ? null : SiteService.DOCUMENT_LIBRARY), 
+				jsonActivityData,
+				null,
+				fileInfo);
+
 	}
 	
     private boolean isContentDoc(NodeRef nodeRef) {
@@ -105,6 +150,18 @@ public class AutoVersionByNameBehaviour implements NodeServicePolicies.OnCreateN
 
 	public void setContentService(ContentService contentService) {
 		this.contentService = contentService;
+	}
+
+	public void setActivityService(ActivityService activityService) {
+		this.activityService = activityService;
+	}
+
+	public void setSiteService(SiteService siteService) {
+		this.siteService = siteService;
+	}
+
+	public void setFileFolderService(FileFolderService fileFolderService) {
+		this.fileFolderService = fileFolderService;
 	}
 
 }

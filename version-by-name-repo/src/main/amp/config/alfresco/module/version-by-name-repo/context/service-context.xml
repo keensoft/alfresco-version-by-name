@@ -6,6 +6,10 @@
     	<property name="policyComponent" ref="policyComponent"/>
     	<property name="nodeService" ref="NodeService"/>
     	<property name="contentService" ref="ContentService"/>
+    	<property name="siteService" ref="SiteService" />
+    	<property name="fileFolderService" ref="FileFolderService"/>
+    	<!-- No "starting-capital" bean is available -->
+    	<property name="activityService" ref="activityService"/>
 	</bean>
 	
 </beans>
