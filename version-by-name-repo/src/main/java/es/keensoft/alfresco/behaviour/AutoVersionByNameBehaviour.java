@@ -3,8 +3,6 @@ package es.keensoft.alfresco.behaviour;
 import java.net.URLEncoder;
 
 import org.alfresco.model.ContentModel;
-import org.alfresco.repo.Client;
-import org.alfresco.repo.Client.ClientType;
 import org.alfresco.repo.activities.ActivityType;
 import org.alfresco.repo.node.NodeServicePolicies;
 import org.alfresco.repo.policy.Behaviour;
@@ -99,19 +97,15 @@ public class AutoVersionByNameBehaviour implements NodeServicePolicies.OnCreateN
     	return nodeService.getType(nodeService.getPrimaryParent(nodeRef).getParentRef()).isMatch(ContentModel.TYPE_FOLDER);
     }
     
+    // Better performance than using "NodeService.getChildAssocs()" method for high volumes ( > 3,000 children)
+	// FTS query, which is also a safe method to retrieve one child, is not synchronous
     private NodeRef existedPreviousDocument(NodeRef currentNodeRef) {
     	
     	String fileName = cleanNumberedSuffixes(nodeService.getProperty(currentNodeRef, ContentModel.PROP_NAME).toString());
-    	NodeRef folder = nodeService.getPrimaryParent(currentNodeRef).getParentRef();
-    	
-    	// FIXME This method could be potentially dangerous when having more than 3,000 childs (!) 
-    	for (ChildAssociationRef child : nodeService.getChildAssocs(folder)) {
-    		String currentName = nodeService.getProperty(child.getChildRef(), ContentModel.PROP_NAME).toString();
-    		if (currentName.equals(fileName) && !(child.getChildRef().getId().equals(currentNodeRef.getId()))) {
-    			return child.getChildRef();
-    		}
+    	if (!fileName.equals(nodeService.getProperty(currentNodeRef, ContentModel.PROP_NAME).toString())) {
+	    	NodeRef folder = nodeService.getPrimaryParent(currentNodeRef).getParentRef();
+	    	return nodeService.getChildByName(folder, ContentModel.ASSOC_CONTAINS, fileName);
     	}
-    	
     	return null;
     	
     }
