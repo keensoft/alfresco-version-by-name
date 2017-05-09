@@ -80,16 +80,12 @@ public class AutoVersionByNameBehaviour implements NodeServicePolicies.OnCreateN
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
-		FileInfo fileInfo = fileFolderService.getFileInfo(nodeRef);
 		
         activityService.postActivity(
 				ActivityType.FILE_UPDATED, 
 				(siteInfo == null ? null : siteInfo.getShortName()), 
 				(siteInfo == null ? null : SiteService.DOCUMENT_LIBRARY), 
-				jsonActivityData,
-				null,
-				fileInfo);
+				jsonActivityData);
 
 	}
 	
